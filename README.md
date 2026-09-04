@@ -4,7 +4,7 @@ Merge multiple PDFs into one, entirely in the browser. Files are never uploaded 
 
 - Drag & drop or click to add PDFs (non-PDFs are rejected, duplicates are ignored)
 - Reorder before merging by dragging rows, or with the per-row ↑ / ↓ buttons
-- Works with touch: drag rows by their grip handle, with auto-scroll at the screen edges
+- Works with touch: press and hold a row, or drag it by the grip handle, with auto-scroll at the screen edges
 - Light and dark themes, following your OS by default
 
 ## Requirements
@@ -71,7 +71,7 @@ src/
 
 **State.** [`usePdfMerger`](src/hooks/usePdfMerger.ts) is the only hook `App` consumes. It composes the file queue, owns `isMerging` and the single error message, and exposes `canMerge`. Files are de-duplicated by name + size + last-modified, which also gives each row a React key that survives reordering.
 
-**Reordering.** [`useDragReorder`](src/hooks/useDragReorder.ts) uses pointer events rather than the HTML5 drag API, which never fires on touch devices. The list reorders live as the pointer passes over rows, so what you see mid-drag is the result. Touch drags must start on the grip handle — the rest of the row stays scrollable — while a mouse can grab anywhere. The ↑ / ↓ buttons remain the keyboard path.
+**Reordering.** [`useDragReorder`](src/hooks/useDragReorder.ts) uses pointer events rather than the HTML5 drag API, which never fires on touch devices. It behaves like a kanban board: the pressed card lifts and follows the pointer, the other rows slide aside to open a dashed gap, and the card animates into that gap on release — the array is only spliced once, when the drop lands. Row geometry is snapshotted at drag start, so the transforms it applies can never feed back into hit-testing. A mouse can grab anywhere on a card and activates after 4px of travel, so a plain click stays a click; touch either presses and holds for 220ms or grabs the grip handle immediately, leaving the rest of the row scrollable until then. The ↑ / ↓ buttons remain the keyboard path.
 
 **Theming.** The preference (`light`, `dark` or `system`) lives in `localStorage` and resolves to a `dark` class on `<html>`, which drives Tailwind's `dark:` variant via a custom variant in `index.css`. While set to `system`, a `matchMedia` listener tracks OS changes live. An inline script in `index.html` applies the stored theme before first paint to avoid a flash of the wrong colours.
 
