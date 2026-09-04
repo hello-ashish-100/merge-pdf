@@ -19,8 +19,14 @@ export const PdfFileList = ({
   onRemove,
   onClear,
 }: PdfFileListProps) => {
-  const { draggingIndex, getItemProps, getHandleProps } =
-    useDragReorder(onReorder);
+  const {
+    isDragging,
+    draggingIndex,
+    placeholder,
+    listProps,
+    getItemProps,
+    getHandleProps,
+  } = useDragReorder(onReorder);
 
   if (files.length === 0) return null;
 
@@ -31,7 +37,7 @@ export const PdfFileList = ({
           <h2 className="font-semibold">Selected PDFs ({files.length})</h2>
 
           <p className="mt-1 text-xs text-zinc-600 dark:text-zinc-500">
-            Drag the handle to reorder - pages merge top to bottom.
+            Drag a card to reorder - pages merge top to bottom.
           </p>
         </div>
 
@@ -44,7 +50,20 @@ export const PdfFileList = ({
         </button>
       </div>
 
-      <ul className="space-y-3">
+      <ul
+        {...listProps}
+        className={`relative flex flex-col gap-3 ${
+          isDragging ? "cursor-move" : ""
+        }`}
+      >
+        {placeholder && (
+          <li
+            aria-hidden="true"
+            style={{ top: placeholder.top, height: placeholder.height }}
+            className="pointer-events-none absolute inset-x-0 rounded-xl border-2 border-dashed border-zinc-300 bg-zinc-100/60 dark:border-zinc-700 dark:bg-zinc-900/40"
+          />
+        )}
+
         {files.map((file, index) => (
           <PdfFileItem
             key={getFileKey(file)}
@@ -54,7 +73,7 @@ export const PdfFileList = ({
             isLast={index === files.length - 1}
             isDragging={draggingIndex === index}
             itemProps={getItemProps(index)}
-            handleProps={getHandleProps(index)}
+            handleProps={getHandleProps()}
             onMoveUp={() => onMoveUp(index)}
             onMoveDown={() => onMoveDown(index)}
             onRemove={() => onRemove(index)}

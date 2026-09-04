@@ -43,17 +43,17 @@ export const PdfFileItem = ({
 }: PdfFileItemProps) => (
   <li
     {...itemProps}
-    className={`flex items-center justify-between rounded-xl border bg-zinc-50 p-4 transition select-none dark:bg-zinc-950 ${
+    className={`relative flex touch-manipulation items-center justify-between rounded-xl border p-4 transition-colors select-none ${
       isDragging
-        ? "relative z-10 border-zinc-300 shadow-lg ring-2 ring-zinc-400 dark:border-zinc-700 dark:shadow-black/40 dark:ring-zinc-600"
-        : "border-zinc-200 hover:border-zinc-300 dark:border-zinc-800 dark:hover:border-zinc-700"
+        ? "cursor-move border-zinc-300 bg-white shadow-2xl shadow-zinc-900/15 dark:border-zinc-700 dark:bg-zinc-900 dark:shadow-black/60"
+        : "cursor-move border-zinc-200 bg-zinc-50 hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700"
     }`}
   >
     <div className="flex min-w-0 items-center gap-2">
       <span
         {...handleProps}
         aria-hidden="true"
-        className="-m-2 shrink-0 cursor-grab touch-none p-2 text-zinc-400 transition hover:text-zinc-600 active:cursor-grabbing dark:text-zinc-600 dark:hover:text-zinc-400"
+        className="-m-2 shrink-0 cursor-move touch-none p-2 text-zinc-400 transition-colors hover:text-zinc-600 dark:text-zinc-600 dark:hover:text-zinc-400"
       >
         <GripIcon />
       </span>
